@@ -1,0 +1,475 @@
+[
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "name": "closeLend",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getAvailableLends",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitPrice",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256[]",
+                  "name": "rents",
+                  "type": "uint256[]"
+               }
+            ],
+            "internalType": "struct IRentMarket.Lend[]",
+            "name": "lends",
+            "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "name": "getAvailableStatus",
+      "outputs": [
+         {
+            "internalType": "bool",
+            "name": "available",
+            "type": "bool"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "customer",
+            "type": "address"
+         }
+      ],
+      "name": "getCustomerRents",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "customer",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "lendId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               }
+            ],
+            "internalType": "struct IRentMarket.Rent[]",
+            "name": "rents",
+            "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getLends",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitPrice",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256[]",
+                  "name": "rents",
+                  "type": "uint256[]"
+               }
+            ],
+            "internalType": "struct IRentMarket.Lend[]",
+            "name": "lends",
+            "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+         }
+      ],
+      "name": "getOwnerLends",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitPrice",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256[]",
+                  "name": "rents",
+                  "type": "uint256[]"
+               }
+            ],
+            "internalType": "struct IRentMarket.Lend[]",
+            "name": "lends",
+            "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getRents",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "customer",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "lendId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               }
+            ],
+            "internalType": "struct IRentMarket.Rent[]",
+            "name": "rents",
+            "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getTokenPayment",
+      "outputs": [
+         {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+         },
+         {
+            "internalType": "address",
+            "name": "collectionAddress",
+            "type": "address"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitSeconds",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitPrice",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitCount",
+            "type": "uint256"
+         }
+      ],
+      "name": "initLend",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitCount",
+            "type": "uint256"
+         }
+      ],
+      "name": "intiRent",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "rentId",
+            "type": "uint256"
+         }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "token",
+            "type": "address"
+         }
+      ],
+      "name": "setTokenPayment",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   }
+]

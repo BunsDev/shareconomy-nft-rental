@@ -1,0 +1,5 @@
+require('hardhat')
+const { solution } = require('../deployConfig')
+const selfInstructions = require(`./solution/${solution}/selfInstructions`)
+const contracts = require('../results/contracts.json')
+selfInstructions.collection(contracts)
