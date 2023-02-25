@@ -4,8 +4,8 @@ const constants = require('./constants')
 
 const requirementsName = [
     //
-    // 'ERC20',
-    // 'Ownable',
+    'ERC20',
+    'Ownable',
     'NFTRentable',
     'RentMarket',
 ]
@@ -14,6 +14,7 @@ const requirements = [
     {
         factoryName: 'Ownable',
         params: [],
+        verification: true,
         selfInstruction: selfInstructions.defaultMethod,
     },
     {
@@ -23,16 +24,19 @@ const requirements = [
             constants.COLLECTION_SYMBOL,
             { method: getAddress, args: ['Ownable'] },
         ],
+        verification: true,
         selfInstruction: selfInstructions.nftRentable,
     },
     {
         factoryName: 'RentMarket',
         params: [{ method: getAddress, args: ['Ownable'] }],
+        verification: true,
         selfInstruction: selfInstructions.rentMarket,
     },
     {
         factoryName: 'ERC20',
         params: ['1000000000000000000000000000000', 'ERC20', '18', 'ERC20'],
+        verification: false,
         selfInstruction: selfInstructions.defaultMethod,
     },
 ]

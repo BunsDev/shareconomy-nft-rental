@@ -21,6 +21,7 @@ function writeResult() {
 async function main() {
     try {
         for (const obj of storage.container) {
+            setTimeout(() => {}, 1000)
             for (let i = 0; i < obj.params.length; i++) {
                 if (typeof obj.params[i] == 'object') {
                     obj.params[i] = obj.params[i].method(...obj.params[i].args)
@@ -30,12 +31,14 @@ async function main() {
             freshContracts[obj.factoryName] = contract
             oldContracts[obj.factoryName] = contract
 
-            console.log('start verification')
             try {
-                await hardhat.run('verify:verify', {
-                    address: contract.address,
-                    constructorArguments: obj.params,
-                })
+                if (obj.verification) {
+                    console.log('start verification')
+                    await hardhat.run('verify:verify', {
+                        address: contract.address,
+                        constructorArguments: obj.params,
+                    })
+                }
             } catch (e) {
                 console.log(e)
             }
