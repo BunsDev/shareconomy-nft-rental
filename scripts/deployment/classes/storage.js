@@ -15,6 +15,7 @@ class Storage {
             const contract = new Contract(
                 requirement.factoryName,
                 requirement.params,
+                requirement.verification,
                 requirement.selfInstruction
             )
             this.container.push(contract)

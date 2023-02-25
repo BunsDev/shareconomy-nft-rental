@@ -36,7 +36,7 @@ const requirements = [
     {
         factoryName: 'ERC20',
         params: ['1000000000000000000000000000000', 'ERC20', '18', 'ERC20'],
-        verification: false,
+        verification: true,
         selfInstruction: selfInstructions.defaultMethod,
     },
 ]

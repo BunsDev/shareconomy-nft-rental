@@ -21,7 +21,6 @@ function writeResult() {
 async function main() {
     try {
         for (const obj of storage.container) {
-            setTimeout(() => {}, 1000)
             for (let i = 0; i < obj.params.length; i++) {
                 if (typeof obj.params[i] == 'object') {
                     obj.params[i] = obj.params[i].method(...obj.params[i].args)
@@ -38,6 +37,8 @@ async function main() {
                         address: contract.address,
                         constructorArguments: obj.params,
                     })
+                } else {
+                    console.log('verification denied')
                 }
             } catch (e) {
                 console.log(e)
