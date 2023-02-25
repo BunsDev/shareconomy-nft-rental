@@ -30,6 +30,13 @@ interface IRentMarket {
         uint[] rents;
     }
 
+    function isApprovedOrOwner(
+        address spender, 
+        uint256 tokenId, 
+        address collectionAddress
+    )
+        external view returns(bool);
+
     function getTokenPayment() 
         external view returns(address token);
 
@@ -40,9 +47,21 @@ interface IRentMarket {
     function getLends() 
         external view returns(Lend[] memory lends);
 
+    function getLendsCount()
+        external view returns(uint lendCount);
+
+    function getLendById(uint lendId)
+        external view returns(Lend memory lend);
+
     // list of all rents
     function getRents() 
         external view returns(Rent[] memory rents);
+
+    function getRentsCount()
+        external view returns(uint rentCount);
+
+    function getRentById(uint rentId)
+        external view returns(Rent memory rent);
 
     // lend page
     function getOwnerLends(address owner)

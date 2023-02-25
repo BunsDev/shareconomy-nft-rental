@@ -1,4 +1,4 @@
-const mysql = require('mysql2')
+const private = require('./private.json')
 
 const CHAIN_ID = 4002
 
@@ -17,10 +17,11 @@ const providers = {
 const defaultNetwork = chains[CHAIN_ID]
 
 const hardhat = new Object()
-hardhat.accounts = [
-    'fb6840d86cf90fc62b7f566c4bf1a43a232bf83523cc21a6c00aa7d221156e1d',
-]
+hardhat.accounts = [private.PRIVATE_KEY]
 hardhat.defaultNetwork = defaultNetwork
+hardhat.etherscan = {
+    apiKey: private.apiKey,
+}
 hardhat.networks = {
     bsc_main: {
         url: providers[56],

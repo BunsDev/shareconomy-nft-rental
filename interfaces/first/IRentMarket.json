@@ -173,6 +173,82 @@
       "type": "function"
    },
    {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "name": "getLendById",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "owner",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitPrice",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256[]",
+                  "name": "rents",
+                  "type": "uint256[]"
+               }
+            ],
+            "internalType": "struct IRentMarket.Lend",
+            "name": "lend",
+            "type": "tuple"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
       "inputs": [],
       "name": "getLends",
       "outputs": [
@@ -237,6 +313,19 @@
             "internalType": "struct IRentMarket.Lend[]",
             "name": "lends",
             "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getLendsCount",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendCount",
+            "type": "uint256"
          }
       ],
       "stateMutability": "view",
@@ -319,6 +408,77 @@
       "type": "function"
    },
    {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "rentId",
+            "type": "uint256"
+         }
+      ],
+      "name": "getRentById",
+      "outputs": [
+         {
+            "components": [
+               {
+                  "internalType": "uint256",
+                  "name": "id",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "tokenId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "address",
+                  "name": "collectionAddress",
+                  "type": "address"
+               },
+               {
+                  "internalType": "string",
+                  "name": "tokenUri",
+                  "type": "string"
+               },
+               {
+                  "internalType": "address",
+                  "name": "customer",
+                  "type": "address"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "lendId",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitSeconds",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "timeUnitCount",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "startTimestamp",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "endTimestamp",
+                  "type": "uint256"
+               }
+            ],
+            "internalType": "struct IRentMarket.Rent",
+            "name": "rent",
+            "type": "tuple"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
       "inputs": [],
       "name": "getRents",
       "outputs": [
@@ -378,6 +538,19 @@
             "internalType": "struct IRentMarket.Rent[]",
             "name": "rents",
             "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [],
+      "name": "getRentsCount",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "rentCount",
+            "type": "uint256"
          }
       ],
       "stateMutability": "view",
@@ -457,6 +630,35 @@
          }
       ],
       "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "spender",
+            "type": "address"
+         },
+         {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+         },
+         {
+            "internalType": "address",
+            "name": "collectionAddress",
+            "type": "address"
+         }
+      ],
+      "name": "isApprovedOrOwner",
+      "outputs": [
+         {
+            "internalType": "bool",
+            "name": "",
+            "type": "bool"
+         }
+      ],
+      "stateMutability": "view",
       "type": "function"
    },
    {

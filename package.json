@@ -8,7 +8,9 @@
         "api-collectData": "node API/collectData/index",
         "api-metadata": "node API/metadata/index",
         "share": "remixd -s C:\\Users\\maxek\\Desktop\\sergeich\\contracts -u https://remix.ethereum.org",
-        "compile": "node ./scripts/compile.js"
+        "compile": "node ./scripts/compilation/compile.js",
+        "deploy": "node ./scripts/deployment/main.js",
+        "verify": "node ./scripts/verification/verify.js"
     },
     "dependencies": {
         "@nomiclabs/hardhat-waffle": "^2.0.3",
@@ -27,5 +29,8 @@
     },
     "keywords": [],
     "author": "",
-    "license": "ISC"
+    "license": "ISC",
+    "devDependencies": {
+        "@nomiclabs/hardhat-etherscan": "^3.1.6"
+    }
 }

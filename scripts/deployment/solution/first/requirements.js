@@ -6,7 +6,7 @@ const requirementsName = [
     //
     // 'ERC20',
     // 'Ownable',
-    // 'NFTRentable',
+    'NFTRentable',
     'RentMarket',
 ]
 

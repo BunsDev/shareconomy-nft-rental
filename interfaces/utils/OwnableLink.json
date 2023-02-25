@@ -7,7 +7,7 @@
             "type": "address"
          }
       ],
-      "name": "SetOwnable",
+      "name": "setOwnable",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

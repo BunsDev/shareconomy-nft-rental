@@ -1,4 +1,5 @@
 const fs = require('fs')
+const hardhat = require('hardhat')
 
 const deploy = require('./modules/deploy')
 const storage = require('./modules/initStorage')
@@ -28,6 +29,16 @@ async function main() {
             const contract = await deploy(obj.factoryName, obj.params ?? [])
             freshContracts[obj.factoryName] = contract
             oldContracts[obj.factoryName] = contract
+
+            console.log('start verification')
+            try {
+                await hardhat.run('verify:verify', {
+                    address: contract.address,
+                    constructorArguments: obj.params,
+                })
+            } catch (e) {
+                console.log(e)
+            }
 
             console.log('start self instructions')
             await obj.selfInstructions(oldContracts)
