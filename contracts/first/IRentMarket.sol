@@ -1,7 +1,9 @@
 // SPDX-License-Identifier: MIT
 pragma solidity 0.8;
 
-interface IRentMarket {
+import "../utils/IOwnableLink.sol";
+
+interface IRentMarket is IOwnableLink {
 
     struct Rent {
         uint id;
@@ -89,7 +91,7 @@ interface IRentMarket {
     function closeLend(uint lendId)
         external;
 
-    function intiRent(
+    function initRent(
         uint lendId, 
         uint timeUnitCount
     ) 

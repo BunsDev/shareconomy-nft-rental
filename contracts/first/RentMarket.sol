@@ -45,16 +45,19 @@ contract RentMarket is IRentMarket, OwnableLink {
 
     function getAvailableStatus(uint lendId) 
         public view override returns(bool available) {
-        Lend memory lend = _lendMap[lendId];
+        Lend storage lend = _lendMap[lendId];
         if (isApprovedOrOwner(
             address(this), 
             lend.tokenId, 
-            lend.collectionAddress))
-        return lend.rents.length == 0
-            ? true 
-            : _rentMap[
-                lend.rents[lend.rents.length-1]
-                ].endTimestamp > block.timestamp;
+            lend.collectionAddress)) {
+            if (lend.endTimestamp > block.timestamp) {
+                return lend.rents.length == 0
+                    ? true 
+                    : _rentMap[
+                        lend.rents[lend.rents.length-1]
+                        ].endTimestamp < block.timestamp;
+            }
+        }
     }
 
     function getLends()
@@ -207,10 +210,10 @@ contract RentMarket is IRentMarket, OwnableLink {
     ) 
         public override returns(uint256 lendId) 
     {
-        require(_nftToLend[collectionAddress][tokenId] == 0 || 
-            !getAvailableStatus(_nftToLend[collectionAddress][tokenId]), 
-            "this token already used" );
-        IERC4907 collection = IERC4907( collectionAddress);
+        IERC4907 collection = IERC4907(collectionAddress);
+        require(collection.userOf(tokenId) == address(0) || 
+            collection.userOf(tokenId) != collection.ownerOf(tokenId), 
+            "this token already used");
         address owner = collection.ownerOf(tokenId);
         require(owner == msg.sender, "haven't this token id");
         
@@ -250,15 +253,19 @@ contract RentMarket is IRentMarket, OwnableLink {
         _tokenPayment.transferFrom(address(this), lend.owner, tokenAmount);
     }
 
-    function intiRent(
+    function initRent(
         uint lendId, 
         uint timeUnitCount
     ) 
         public override returns(uint rentId) 
     {
-        Lend memory lend = _lendMap[lendId];
+        Lend storage lend = _lendMap[lendId];
         uint tokenAmount = lend.timeUnitPrice * timeUnitCount;
-        require(lend.owner == msg.sender, "you can't rent your token");
+        require(
+            lend.endTimestamp >
+            lend.timeUnitSeconds * timeUnitCount + block.timestamp, 
+            "request time more then available");
+        require(lend.owner != msg.sender, "you can't rent your token");
         require(getAvailableStatus(lendId), "lend is busy");
         require(_tokenPayment.allowance(
             msg.sender, 

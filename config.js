@@ -1,16 +1,18 @@
 const private = require('./private.json')
 
-const CHAIN_ID = 4002
+const CHAIN_ID = 250
 
 const chains = {
     56: 'bsc_main',
     98: 'bsc_testnet',
+    250: 'fantom',
     4002: 'fantom_testnet',
 }
 
 const providers = {
     56: 'https://bsc-dataseed.binance.org/',
     97: 'https://data-seed-prebsc-1-s1.binance.org:8545/',
+    250: 'https://endpoints.omniatech.io/v1/fantom/mainnet/public',
     4002: 'https://endpoints.omniatech.io/v1/fantom/testnet/public',
 }
 
@@ -29,6 +31,10 @@ hardhat.networks = {
     },
     bsc_testnet: {
         url: providers[97],
+        accounts: hardhat.accounts,
+    },
+    fantom: {
+        url: providers[250],
         accounts: hardhat.accounts,
     },
     fantom_testnet: {

@@ -28,11 +28,12 @@ contract ERC4907 is ERC721URIStorage, IERC4907 {
         address user,
         uint64 expires
     ) override public virtual {
+        UserInfo storage info = _users[tokenId];
         require(
             _isApprovedOrOwner(msg.sender, tokenId),
             "ERC721: transfer caller is not owner nor approved"
         );
-        UserInfo storage info = _users[tokenId];
+        require(userOf(tokenId) == address(0), "user already set");
         info.user = user;
         info.expires = expires;
         emit UpdateUser(tokenId, user, expires);
@@ -52,7 +53,7 @@ contract ERC4907 is ERC721URIStorage, IERC4907 {
         if (uint256(_users[tokenId].expires) >= block.timestamp) {
             return _users[tokenId].user;
         } else {
-            return _ownerOf(tokenId);
+            return address(0);
         }
     }
 
