@@ -28,7 +28,7 @@ contract RentMarket is IRentMarket, OwnableLink {
         uint256 tokenId, 
         address collectionAddress
     )
-        public view returns(bool)
+        public view override returns(bool)
     {
         IERC4907 collection = IERC4907(collectionAddress);
         address owner = collection.ownerOf(tokenId);
@@ -75,7 +75,7 @@ contract RentMarket is IRentMarket, OwnableLink {
     }
 
     function getLendById(uint lendId)
-        public view returns(Lend memory lend) {
+        public view override returns(Lend memory lend) {
         lend = _lendMap[lendId];
     }
     
@@ -90,12 +90,12 @@ contract RentMarket is IRentMarket, OwnableLink {
     }
 
     function getRentsCount()
-        public view returns(uint rentCount) {
+        public view override returns(uint rentCount) {
         rentCount = _rents.current();
     }
 
     function getRentById(uint rentId)
-        public view returns(Rent memory rent) {
+        public view override returns(Rent memory rent) {
         rent = _rentMap[rentId];
     }
 
