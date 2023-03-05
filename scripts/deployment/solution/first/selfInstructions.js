@@ -3,7 +3,7 @@ const { constants } = require('../../deployConfig')
 
 async function defaultMethod(contracts) {}
 
-async function nftRentable(contracts) {
+async function nftCollection(contract, contracts) {
     const metadata = [
         'ipfs://QmPhySauhdNkJR1QhXu3oDzqpzBDEJ3JCF6tU8ffAzXbfk',
         'ipfs://QmVeAQztwtaHacNnu5sGitzQoEBhnETWRxZbXB3oSWoEg3',
@@ -19,42 +19,50 @@ async function nftRentable(contracts) {
 
     let tx
     //
-    tx = await contracts.NFTRentable.mint(owner, metadata[0])
+    tx = await contract.mint(owner, metadata[0])
     await tx.wait()
-    tx = await contracts.NFTRentable.mint(owner, metadata[0])
-    await tx.wait()
-    //
-    tx = await contracts.NFTRentable.mint(owner, metadata[1])
-    await tx.wait()
-    tx = await contracts.NFTRentable.mint(owner, metadata[1])
+    tx = await contract.mint(owner, metadata[0])
     await tx.wait()
     //
-    tx = await contracts.NFTRentable.mint(owner, metadata[2])
+    tx = await contract.mint(owner, metadata[1])
     await tx.wait()
-    tx = await contracts.NFTRentable.mint(owner, metadata[2])
+    tx = await contract.mint(owner, metadata[1])
     await tx.wait()
     //
-    tx = await contracts.NFTRentable.mint(owner, metadata[3])
+    tx = await contract.mint(owner, metadata[2])
     await tx.wait()
-    tx = await contracts.NFTRentable.mint(owner, metadata[3])
+    tx = await contract.mint(owner, metadata[2])
     await tx.wait()
+    //
+    tx = await contract.mint(owner, metadata[3])
+    await tx.wait()
+    tx = await contract.mint(owner, metadata[3])
+    await tx.wait()
+}
+
+async function nftRentable(contracts) {
+    await nftCollection(contracts.NFTRentable, contracts)
+}
+
+async function multiNFT(contracts) {
+    await nftCollection(contracts.MultiNFT, contracts)
 }
 
 async function rentMarket(contracts) {
     let tx
-    const collectionAddress = contracts.NFTRentable.address
+    const collectionAddress = contracts.MultiNFT.address
     const lends = [
-        [1, collectionAddress, 60, '1000000000000000000', 10],
-        [3, collectionAddress, 60, '2000000000000000000', 20],
-        [5, collectionAddress, 60, '3000000000000000000', 30],
-        [7, collectionAddress, 60, '4000000000000000000', 40],
+        [1, collectionAddress, 3600, '1000000000000000000', 100],
+        [3, collectionAddress, 3600, '2000000000000000000', 200],
+        [5, collectionAddress, 60, '3000000000000000000', 3000],
+        [7, collectionAddress, 60, '4000000000000000000', 4000],
     ]
 
-    const NFTRentable = await ethers.getContractAt(
-        'NFTRentable',
-        contracts.NFTRentable.address
+    const MultiNFT = await ethers.getContractAt(
+        'MultiNFT',
+        contracts.MultiNFT.address
     )
-    tx = await NFTRentable.setApprovalForAll(contracts.RentMarket.address, true)
+    tx = await MultiNFT.setApprovalForAll(contracts.RentMarket.address, true)
     await tx.wait()
 
     tx = await contracts.RentMarket.initLend(...lends[0])
@@ -66,10 +74,13 @@ async function rentMarket(contracts) {
     tx = await contracts.RentMarket.initLend(...lends[3])
     await tx.wait()
 
-    tx = await contracts.RentMarket.setTokenPayment(contracts.ERC20.address)
+    tx = await contracts.RentMarket.setTokenPayment(
+        contracts.MultiERC20.address
+    )
     await tx.wait()
 }
 
 module.exports.defaultMethod = defaultMethod
 module.exports.nftRentable = nftRentable
+module.exports.multiNFT = multiNFT
 module.exports.rentMarket = rentMarket

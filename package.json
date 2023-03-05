@@ -7,8 +7,8 @@
         "api-blockchain": "node API/blockchain/index",
         "api-collectData": "node API/collectData/index",
         "api-metadata": "node API/metadata/index",
-        "share": "remixd -s C:\\Users\\maxek\\Desktop\\sergeich\\contracts -u https://remix.ethereum.org",
-        "share-tron": "remixd -s C:\\Users\\maxek\\Desktop\\sergeich\\contracts -u https://www.tronide.io",
+        "share": "remixd -s C:\\Users\\maxek\\Desktop\\shareconomy\\RentSol\\contracts -u https://remix.ethereum.org",
+        "share-tron": "remixd -s C:\\Users\\maxek\\Desktop\\shareconomy\\RentSol\\contracts -u https://www.tronide.io",
         "compile": "node ./scripts/compilation/compile.js",
         "deploy": "node ./scripts/deployment/main.js",
         "verify": "node ./scripts/verification/verify.js"

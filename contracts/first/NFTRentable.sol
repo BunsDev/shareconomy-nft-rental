@@ -2,10 +2,11 @@
 pragma solidity 0.8;
 
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "./INFTRentable.sol";
 import "../EIPs/ERC4907.sol";
 import "../utils/OwnableLink.sol";
 
-contract NFTRentable is ERC4907, OwnableLink {
+contract NFTRentable is INFTRentable, ERC4907, OwnableLink {
 
     using Counters for Counters.Counter;
 

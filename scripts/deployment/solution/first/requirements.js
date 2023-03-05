@@ -4,10 +4,12 @@ const constants = require('./constants')
 
 const requirementsName = [
     //
-    'ERC20',
-    'Ownable',
-    'NFTRentable',
+    // 'MultiERC20',
+    // 'Ownable',
+    'MultiNFT',
     'RentMarket',
+    // 'ERC20',
+    // 'NFTRentable',
 ]
 
 const requirements = [
@@ -28,6 +30,16 @@ const requirements = [
         selfInstruction: selfInstructions.nftRentable,
     },
     {
+        factoryName: 'MultiNFT',
+        params: [
+            constants.COLLECTION_NAME,
+            constants.COLLECTION_SYMBOL,
+            { method: getAddress, args: ['Ownable'] },
+        ],
+        verification: true,
+        selfInstruction: selfInstructions.multiNFT,
+    },
+    {
         factoryName: 'RentMarket',
         params: [{ method: getAddress, args: ['Ownable'] }],
         verification: true,
@@ -36,6 +48,12 @@ const requirements = [
     {
         factoryName: 'ERC20',
         params: ['1000000000000000000000000000000', 'ERC20', '18', 'ERC20'],
+        verification: true,
+        selfInstruction: selfInstructions.defaultMethod,
+    },
+    {
+        factoryName: 'MultiERC20',
+        params: ['MultiERC20', 'MultiERC20'],
         verification: true,
         selfInstruction: selfInstructions.defaultMethod,
     },

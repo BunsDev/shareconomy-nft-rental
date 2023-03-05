@@ -277,7 +277,7 @@ contract RentMarket is IRentMarket, OwnableLink {
         address customer = msg.sender;
         uint startTimestamp = block.timestamp;
         uint endTimestamp = startTimestamp + timeUnitCount * lend.timeUnitSeconds;
-        IERC4907 collection = IERC4907(lend. collectionAddress);
+        IERC4907 collection = IERC4907(lend.collectionAddress);
         
         collection.setUser(lend.tokenId, customer, uint64(endTimestamp));
         _tokenPayment.transferFrom(msg.sender, address(this), tokenAmount);
