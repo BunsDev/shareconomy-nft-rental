@@ -2,9 +2,14 @@
    {
       "inputs": [
          {
-            "internalType": "address",
-            "name": "nftStaking",
-            "type": "address"
+            "internalType": "string",
+            "name": "name",
+            "type": "string"
+         },
+         {
+            "internalType": "string",
+            "name": "symbol",
+            "type": "string"
          }
       ],
       "stateMutability": "nonpayable",
@@ -318,6 +323,19 @@
    {
       "inputs": [
          {
+            "internalType": "address",
+            "name": "minter",
+            "type": "address"
+         }
+      ],
+      "name": "grandMinter",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
             "internalType": "bytes32",
             "name": "role",
             "type": "bytes32"
@@ -426,6 +444,19 @@
          }
       ],
       "name": "renounceRole",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "minter",
+            "type": "address"
+         }
+      ],
+      "name": "revokeMinter",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"

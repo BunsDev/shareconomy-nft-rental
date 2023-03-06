@@ -5,6 +5,11 @@ import "../utils/IOwnableLink.sol";
 
 interface IRentMarket is IOwnableLink {
 
+    enum Types { 
+    /* 0 */ ERC721,
+    /* 1 */ ERC4907
+    }
+
     struct Rent {
         uint id;
         uint tokenId;
@@ -16,10 +21,12 @@ interface IRentMarket is IOwnableLink {
         uint timeUnitCount;
         uint startTimestamp;
         uint endTimestamp;
+        bool closed; // true if customer closed rent
     }
 
     struct Lend {
         uint id;
+        Types supprortedInterface;
         uint tokenId;
         address collectionAddress;
         string tokenUri;
@@ -29,6 +36,8 @@ interface IRentMarket is IOwnableLink {
         uint timeUnitCount;
         uint startTimestamp;
         uint endTimestamp;
+        uint deposit;
+        bool claimed; // true if owner claimed lend
         uint[] rents;
     }
 
@@ -39,8 +48,14 @@ interface IRentMarket is IOwnableLink {
     )
         external view returns(bool);
 
+    function getSupportedInterface(address collectionAddress)
+        external view returns(Types supportedInterface);
+
     function getTokenPayment() 
         external view returns(address token);
+
+    function getClosedRentStatus(uint lendId)
+        external view returns(bool stealed);
 
     function getAvailableStatus(uint lendId) 
         external view returns(bool available);
@@ -75,9 +90,22 @@ interface IRentMarket is IOwnableLink {
 
     function getCustomerRents(address customer) 
         external view returns(Rent[] memory rents);
+    
+    function getFinishedLends(address owner)
+        external view returns(uint finishedLends);
 
     function setTokenPayment(address token) 
         external;
+
+    function initLendERC721(
+        uint tokenId,
+        address collectionAddress,
+        uint timeUnitSeconds,
+        uint timeUnitPrice,
+        uint timeUnitCount,
+        uint deposit
+    )
+        external returns(uint256 lendId);
 
     function initLend(
         uint tokenId,
@@ -91,9 +119,12 @@ interface IRentMarket is IOwnableLink {
     function closeLend(uint lendId)
         external;
 
-    function initRent(
-        uint lendId, 
-        uint timeUnitCount
-    ) 
+    function claimLends()
+        external;
+
+    function initRent(uint lendId, uint timeUnitCount) 
         external returns(uint rentId);
+
+    function closeRent(uint rentId) 
+        external;
 }

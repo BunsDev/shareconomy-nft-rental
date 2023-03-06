@@ -1,6 +1,7 @@
 const fs = require('fs')
 const hardhat = require('hardhat')
 
+const sleep = require('../sleep')
 const deploy = require('./modules/deploy')
 const storage = require('./modules/initStorage')
 const freshContracts = {}
@@ -43,7 +44,7 @@ async function main() {
             } catch (e) {
                 console.log(e)
             }
-
+            await sleep(1000)
             console.log('start self instructions')
             await obj.selfInstructions(oldContracts)
         }

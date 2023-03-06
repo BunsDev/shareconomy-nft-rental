@@ -1,5 +1,6 @@
 const { ethers } = require('hardhat')
 const { constants } = require('../../deployConfig')
+const sleep = require('../../../sleep')
 
 async function defaultMethod(contracts) {}
 
@@ -21,23 +22,31 @@ async function nftCollection(contract, contracts) {
     //
     tx = await contract.mint(owner, metadata[0])
     await tx.wait()
+    await sleep(1000)
     tx = await contract.mint(owner, metadata[0])
     await tx.wait()
+    await sleep(1000)
     //
     tx = await contract.mint(owner, metadata[1])
     await tx.wait()
+    await sleep(1000)
     tx = await contract.mint(owner, metadata[1])
     await tx.wait()
+    await sleep(1000)
     //
     tx = await contract.mint(owner, metadata[2])
     await tx.wait()
+    await sleep(1000)
     tx = await contract.mint(owner, metadata[2])
     await tx.wait()
+    await sleep(1000)
     //
     tx = await contract.mint(owner, metadata[3])
     await tx.wait()
+    await sleep(1000)
     tx = await contract.mint(owner, metadata[3])
     await tx.wait()
+    await sleep(1000)
 }
 
 async function nftRentable(contracts) {
@@ -64,20 +73,26 @@ async function rentMarket(contracts) {
     )
     tx = await MultiNFT.setApprovalForAll(contracts.RentMarket.address, true)
     await tx.wait()
+    await sleep(1000)
 
     tx = await contracts.RentMarket.initLend(...lends[0])
     await tx.wait()
+    await sleep(1000)
     tx = await contracts.RentMarket.initLend(...lends[1])
     await tx.wait()
+    await sleep(1000)
     tx = await contracts.RentMarket.initLend(...lends[2])
     await tx.wait()
+    await sleep(1000)
     tx = await contracts.RentMarket.initLend(...lends[3])
     await tx.wait()
+    await sleep(1000)
 
     tx = await contracts.RentMarket.setTokenPayment(
         contracts.MultiERC20.address
     )
     await tx.wait()
+    await sleep(1000)
 }
 
 module.exports.defaultMethod = defaultMethod

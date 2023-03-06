@@ -15,6 +15,9 @@ contract RentMarket is IRentMarket, OwnableLink {
         ownable = IOwnable(_owanble);
     }
 
+    bytes4 INTERFACE_ERC4907 = type(IERC4907).interfaceId;
+    bytes4 INTERFACE_ERC721 = type(IERC721).interfaceId;
+
     IERC20 _tokenPayment;
 
     Counters.Counter private _lends;
@@ -38,12 +41,35 @@ contract RentMarket is IRentMarket, OwnableLink {
             collection.getApproved(tokenId) == spender;
     }
 
+    function getSupportedInterface(address collectionAddress)
+        public view returns(Types supportedInterface) {
+        IERC4907 nft = IERC4907(collectionAddress);
+        if (nft.supportsInterface(INTERFACE_ERC4907)) {
+            return Types.ERC4907;
+        } else if (nft.supportsInterface(INTERFACE_ERC721)) {
+            return Types.ERC721;
+        } else {
+            revert("Doesn't support ERC721 or ERC4907");
+        }
+    }
+
     function getTokenPayment() 
         public view override returns(address token) {
         token = address(_tokenPayment);
     }
 
-    function getAvailableStatus(uint lendId) 
+    function getClosedRentStatus(uint lendId)
+        public view returns(bool stealed /* or in use */) {
+        Lend storage lend = _lendMap[lendId];
+        for (uint i; i < lend.rents.length; i++) {
+            Rent storage rent = _rentMap[lend.rents[i]];
+            if (!rent.closed) {
+                stealed = true;
+            }
+        }
+    }
+
+    function getAvailableStatus(uint lendId)
         public view override returns(bool available) {
         Lend storage lend = _lendMap[lendId];
         if (isApprovedOrOwner(
@@ -55,7 +81,9 @@ contract RentMarket is IRentMarket, OwnableLink {
                     ? true 
                     : _rentMap[
                         lend.rents[lend.rents.length-1]
-                        ].endTimestamp < block.timestamp;
+                        ].endTimestamp < block.timestamp
+                        ? false
+                        : getClosedRentStatus(lend.id);
             }
         }
     }
@@ -83,7 +111,6 @@ contract RentMarket is IRentMarket, OwnableLink {
         public view override returns(Rent[] memory rents) {
         uint rentsCount = _rents.current();
         rents = new Rent[](rentsCount);
-
         for (uint i; i < rentsCount; i++) {
             rents[i] = _rentMap[i+1];
         }
@@ -108,9 +135,9 @@ contract RentMarket is IRentMarket, OwnableLink {
 
         for (uint i; i < lendsCount; i++) {
             if (_lendMap[i+1].owner == owner) {
-                if (_lendMap[i+1].endTimestamp > block.timestamp) {
+                // if (_lendMap[i+1].endTimestamp > block.timestamp) {
                     ownerLendCount++;
-                }
+                // }
             }
         }
 
@@ -118,7 +145,7 @@ contract RentMarket is IRentMarket, OwnableLink {
 
         for (uint i; i < lendsCount; i++) {
             if (_lendMap[i+1].owner == owner) {
-                if (_lendMap[i+1].endTimestamp > block.timestamp) {
+                // if (_lendMap[i+1].endTimestamp > block.timestamp) { // to show all
                     lends[current] = _lendMap[i+1];
                     IERC4907 collection = IERC4907(
                         lends[current].collectionAddress
@@ -127,7 +154,7 @@ contract RentMarket is IRentMarket, OwnableLink {
                         lends[current].tokenId
                     );
                     current++;
-                }
+                // }
             }
         }
     }
@@ -137,7 +164,6 @@ contract RentMarket is IRentMarket, OwnableLink {
         uint lendsCount = _lends.current();
         uint availableRentCount;
         uint current;
-
         for (uint i; i < lendsCount; i++) {
             if (getAvailableStatus(i+1)) {
                 if (_lendMap[i+1].endTimestamp > block.timestamp) {
@@ -196,27 +222,44 @@ contract RentMarket is IRentMarket, OwnableLink {
         }
     }
 
+    
+    function getFinishedLends(address owner)
+        public view override returns(uint finishedLends) {
+        Lend[] memory lends = getOwnerLends(owner);
+        for (uint i; i < lends.length; i++) {
+            Lend storage lend = _lendMap[lends[i].id];
+            if (lend.endTimestamp < block.timestamp) {
+                if (!lend.claimed) {
+                    finishedLends++;
+                }
+            }
+        }
+    }
+
     function setTokenPayment(address token)
         public override CheckPerms {
         _tokenPayment = IERC20(token);
     }
 
-    function initLend(
+    function _initLend(
+        Types supportedInterface,
         uint tokenId,
         address collectionAddress,
         uint timeUnitSeconds,
         uint timeUnitPrice,
-        uint timeUnitCount
-    ) 
-        public override returns(uint256 lendId) 
-    {
+        uint timeUnitCount,
+        uint deposit
+    )
+        private returns(uint256 lendId) {
         IERC4907 collection = IERC4907(collectionAddress);
-        require(collection.userOf(tokenId) == address(0) || 
+        address owner = collection.ownerOf(tokenId);
+
+        require(
+            collection.userOf(tokenId) == address(0) || 
             collection.userOf(tokenId) != collection.ownerOf(tokenId), 
             "this token already used");
-        address owner = collection.ownerOf(tokenId);
         require(owner == msg.sender, "haven't this token id");
-        
+
         _lends.increment();
         lendId = _lends.current();
         uint startTimestamp = block.timestamp;
@@ -225,6 +268,7 @@ contract RentMarket is IRentMarket, OwnableLink {
         _nftToLend[collectionAddress][tokenId] = lendId;
         _lendMap[lendId] = Lend(
             lendId,
+            supportedInterface,
             tokenId,
              collectionAddress,
             "",
@@ -234,33 +278,105 @@ contract RentMarket is IRentMarket, OwnableLink {
             timeUnitCount,
             startTimestamp,
             endTimestamp,
+            deposit,
+            false,
             new uint[](0)
+        );
+
+    }
+
+    function initLendERC721(
+        uint tokenId,
+        address collectionAddress,
+        uint timeUnitSeconds,
+        uint timeUnitPrice,
+        uint timeUnitCount,
+        uint deposit
+    )
+        public override returns(uint256 lendId) {
+        require(
+            getSupportedInterface(collectionAddress) == Types.ERC721 ||
+            getSupportedInterface(collectionAddress) == Types.ERC4907,
+            "Doesn't support ERC721");
+        lendId = _initLend(
+            Types.ERC721,
+            tokenId,
+            collectionAddress,
+            timeUnitSeconds,
+            timeUnitPrice,
+            timeUnitCount,
+            deposit
+        );
+    }
+
+    function initLend(
+        uint tokenId,
+        address collectionAddress,
+        uint timeUnitSeconds,
+        uint timeUnitPrice,
+        uint timeUnitCount
+    ) 
+        public override returns(uint256 lendId) {
+        require(
+            getSupportedInterface(collectionAddress) == Types.ERC4907,
+            "Doesn't support ERC4907");
+        lendId = _initLend(
+            Types.ERC4907,
+            tokenId,
+            collectionAddress,
+            timeUnitSeconds,
+            timeUnitPrice,
+            timeUnitCount,
+            0
         );
     }
 
     function closeLend(uint lendId) 
         public override {
-        Lend memory lend = _lendMap[lendId];
+        Lend storage lend = _lendMap[lendId];
+        require(!lend.claimed, "already claimed");
         require(lend.endTimestamp < block.timestamp, "its landing now");
         uint tokenAmount;
-        
-        for (uint i; i <= lend.rents.length; i++) {
+
+        for (uint i; i < lend.rents.length; i++) {
             tokenAmount += 
                 lend.timeUnitPrice * 
                 _rentMap[lend.rents[i]].timeUnitCount;
+            if (lend.supprortedInterface == Types.ERC721) {
+                if (getClosedRentStatus(lendId)) {
+                    tokenAmount += lend.deposit;
+                }
+            }
         }
 
-        _tokenPayment.transferFrom(address(this), lend.owner, tokenAmount);
+        lend.claimed = true;
+        _tokenPayment.transfer(lend.owner, tokenAmount);
+    }
+
+    function claimLends()
+        public override {
+        Lend[] memory lends = getOwnerLends(msg.sender);
+        for (uint i; i < lends.length; i++) {
+            Lend storage lend = _lendMap[lends[i].id];
+            if (lend.endTimestamp < block.timestamp) {
+                if (!lend.claimed) {
+                    closeLend(lend.id);
+                }
+            }
+        }
     }
 
     function initRent(
         uint lendId, 
         uint timeUnitCount
     ) 
-        public override returns(uint rentId) 
-    {
+        public override returns(uint rentId) {
         Lend storage lend = _lendMap[lendId];
         uint tokenAmount = lend.timeUnitPrice * timeUnitCount;
+        if (lend.supprortedInterface == Types.ERC721) {
+            require(_tokenPayment.allowance(msg.sender, address(this)) >= lend.deposit, "Haven't tokens to deposit");
+            _tokenPayment.transferFrom(msg.sender, address(this), lend.deposit);
+        }
         require(
             lend.endTimestamp >
             lend.timeUnitSeconds * timeUnitCount + block.timestamp, 
@@ -279,7 +395,11 @@ contract RentMarket is IRentMarket, OwnableLink {
         uint endTimestamp = startTimestamp + timeUnitCount * lend.timeUnitSeconds;
         IERC4907 collection = IERC4907(lend.collectionAddress);
         
-        collection.setUser(lend.tokenId, customer, uint64(endTimestamp));
+        if (lend.supprortedInterface == Types.ERC4907) {
+            collection.setUser(lend.tokenId, customer, uint64(endTimestamp));
+        } else {
+            collection.transferFrom(lend.owner, msg.sender, lend.tokenId);
+        }
         _tokenPayment.transferFrom(msg.sender, address(this), tokenAmount);
 
         _rentMap[rentId] = Rent(
@@ -292,8 +412,23 @@ contract RentMarket is IRentMarket, OwnableLink {
             lend.timeUnitSeconds,
             timeUnitCount,
             startTimestamp,
-            endTimestamp
+            endTimestamp,
+            false
         );
         _lendMap[lendId].rents.push(rentId);
+    }
+
+    function closeRent(uint rentId) 
+        public override {
+        // todo
+        Rent storage rent = _rentMap[rentId];
+        Lend storage lend = _lendMap[rent.lendId];
+        IERC4907 collection = IERC4907(lend.collectionAddress);
+        require(rent.endTimestamp < block.timestamp, "to late");
+        require(lend.supprortedInterface == Types.ERC721, "doesn't need to close");
+        require(isApprovedOrOwner(address(this), lend.tokenId, lend.collectionAddress), "doesn't approved");
+        collection.transferFrom(msg.sender, address(this), lend.tokenId);
+        _tokenPayment.transfer(msg.sender, lend.deposit);
+        rent.closed = true;
     }
 }

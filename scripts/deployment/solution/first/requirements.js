@@ -4,8 +4,8 @@ const constants = require('./constants')
 
 const requirementsName = [
     //
-    // 'MultiERC20',
-    // 'Ownable',
+    'MultiERC20',
+    'Ownable',
     'MultiNFT',
     'RentMarket',
     // 'ERC20',

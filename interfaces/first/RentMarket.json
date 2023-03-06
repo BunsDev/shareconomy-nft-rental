@@ -11,6 +11,13 @@
       "type": "constructor"
    },
    {
+      "inputs": [],
+      "name": "claimLends",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
       "inputs": [
          {
             "internalType": "uint256",
@@ -19,6 +26,19 @@
          }
       ],
       "name": "closeLend",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "rentId",
+            "type": "uint256"
+         }
+      ],
+      "name": "closeRent",
       "outputs": [],
       "stateMutability": "nonpayable",
       "type": "function"
@@ -33,6 +53,11 @@
                   "internalType": "uint256",
                   "name": "id",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "enum IRentMarket.Types",
+                  "name": "supprortedInterface",
+                  "type": "uint8"
                },
                {
                   "internalType": "uint256",
@@ -80,6 +105,16 @@
                   "type": "uint256"
                },
                {
+                  "internalType": "uint256",
+                  "name": "deposit",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "claimed",
+                  "type": "bool"
+               },
+               {
                   "internalType": "uint256[]",
                   "name": "rents",
                   "type": "uint256[]"
@@ -106,6 +141,25 @@
          {
             "internalType": "bool",
             "name": "available",
+            "type": "bool"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "name": "getClosedRentStatus",
+      "outputs": [
+         {
+            "internalType": "bool",
+            "name": "stealed",
             "type": "bool"
          }
       ],
@@ -173,11 +227,35 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "closed",
+                  "type": "bool"
                }
             ],
             "internalType": "struct IRentMarket.Rent[]",
             "name": "rents",
             "type": "tuple[]"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "owner",
+            "type": "address"
+         }
+      ],
+      "name": "getFinishedLends",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "finishedLends",
+            "type": "uint256"
          }
       ],
       "stateMutability": "view",
@@ -199,6 +277,11 @@
                   "internalType": "uint256",
                   "name": "id",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "enum IRentMarket.Types",
+                  "name": "supprortedInterface",
+                  "type": "uint8"
                },
                {
                   "internalType": "uint256",
@@ -244,6 +327,16 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "deposit",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "claimed",
+                  "type": "bool"
                },
                {
                   "internalType": "uint256[]",
@@ -271,6 +364,11 @@
                   "type": "uint256"
                },
                {
+                  "internalType": "enum IRentMarket.Types",
+                  "name": "supprortedInterface",
+                  "type": "uint8"
+               },
+               {
                   "internalType": "uint256",
                   "name": "tokenId",
                   "type": "uint256"
@@ -314,6 +412,16 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "deposit",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "claimed",
+                  "type": "bool"
                },
                {
                   "internalType": "uint256[]",
@@ -360,6 +468,11 @@
                   "type": "uint256"
                },
                {
+                  "internalType": "enum IRentMarket.Types",
+                  "name": "supprortedInterface",
+                  "type": "uint8"
+               },
+               {
                   "internalType": "uint256",
                   "name": "tokenId",
                   "type": "uint256"
@@ -403,6 +516,16 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "uint256",
+                  "name": "deposit",
+                  "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "claimed",
+                  "type": "bool"
                },
                {
                   "internalType": "uint256[]",
@@ -479,6 +602,11 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "closed",
+                  "type": "bool"
                }
             ],
             "internalType": "struct IRentMarket.Rent",
@@ -544,6 +672,11 @@
                   "internalType": "uint256",
                   "name": "endTimestamp",
                   "type": "uint256"
+               },
+               {
+                  "internalType": "bool",
+                  "name": "closed",
+                  "type": "bool"
                }
             ],
             "internalType": "struct IRentMarket.Rent[]",
@@ -562,6 +695,25 @@
             "internalType": "uint256",
             "name": "rentCount",
             "type": "uint256"
+         }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "address",
+            "name": "collectionAddress",
+            "type": "address"
+         }
+      ],
+      "name": "getSupportedInterface",
+      "outputs": [
+         {
+            "internalType": "enum IRentMarket.Types",
+            "name": "supportedInterface",
+            "type": "uint8"
          }
       ],
       "stateMutability": "view",
@@ -609,6 +761,50 @@
          }
       ],
       "name": "initLend",
+      "outputs": [
+         {
+            "internalType": "uint256",
+            "name": "lendId",
+            "type": "uint256"
+         }
+      ],
+      "stateMutability": "nonpayable",
+      "type": "function"
+   },
+   {
+      "inputs": [
+         {
+            "internalType": "uint256",
+            "name": "tokenId",
+            "type": "uint256"
+         },
+         {
+            "internalType": "address",
+            "name": "collectionAddress",
+            "type": "address"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitSeconds",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitPrice",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "timeUnitCount",
+            "type": "uint256"
+         },
+         {
+            "internalType": "uint256",
+            "name": "deposit",
+            "type": "uint256"
+         }
+      ],
+      "name": "initLendERC721",
       "outputs": [
          {
             "internalType": "uint256",
