@@ -135,9 +135,10 @@ contract RentMarket is IRentMarket, OwnableLink {
 
         for (uint i; i < lendsCount; i++) {
             if (_lendMap[i+1].owner == owner) {
+                if (!_lendMap[i+1].claimed) {
                 // if (_lendMap[i+1].endTimestamp > block.timestamp) {
                     ownerLendCount++;
-                // }
+                }
             }
         }
 
@@ -145,6 +146,7 @@ contract RentMarket is IRentMarket, OwnableLink {
 
         for (uint i; i < lendsCount; i++) {
             if (_lendMap[i+1].owner == owner) {
+                if (!_lendMap[i+1].claimed) {
                 // if (_lendMap[i+1].endTimestamp > block.timestamp) { // to show all
                     lends[current] = _lendMap[i+1];
                     IERC4907 collection = IERC4907(
@@ -154,7 +156,7 @@ contract RentMarket is IRentMarket, OwnableLink {
                         lends[current].tokenId
                     );
                     current++;
-                // }
+                }
             }
         }
     }
@@ -337,20 +339,23 @@ contract RentMarket is IRentMarket, OwnableLink {
         require(!lend.claimed, "already claimed");
         require(lend.endTimestamp < block.timestamp, "its landing now");
         uint tokenAmount;
-
-        for (uint i; i < lend.rents.length; i++) {
-            tokenAmount += 
-                lend.timeUnitPrice * 
-                _rentMap[lend.rents[i]].timeUnitCount;
-            if (lend.supprortedInterface == Types.ERC721) {
-                if (getClosedRentStatus(lendId)) {
-                    tokenAmount += lend.deposit;
+        
+        if (lend.rents.length > 0) {
+            for (uint i; i < lend.rents.length; i++) {
+                tokenAmount += 
+                    lend.timeUnitPrice * 
+                    _rentMap[lend.rents[i]].timeUnitCount;
+                if (lend.supprortedInterface == Types.ERC721) {
+                    if (getClosedRentStatus(lendId)) {
+                        tokenAmount += lend.deposit;
+                    }
                 }
             }
+
+            _tokenPayment.transfer(lend.owner, tokenAmount);
         }
 
         lend.claimed = true;
-        _tokenPayment.transfer(lend.owner, tokenAmount);
     }
 
     function claimLends()

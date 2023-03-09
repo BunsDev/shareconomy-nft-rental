@@ -4,9 +4,9 @@ const constants = require('./constants')
 
 const requirementsName = [
     //
-    'MultiERC20',
-    'Ownable',
-    'MultiNFT',
+    // 'MultiERC20',
+    // 'Ownable',
+    // 'MultiNFT',
     'RentMarket',
     // 'ERC20',
     // 'NFTRentable',
@@ -53,7 +53,7 @@ const requirements = [
     },
     {
         factoryName: 'MultiERC20',
-        params: ['MultiERC20', 'MultiERC20'],
+        params: ['Meta Coin', 'MC'],
         verification: true,
         selfInstruction: selfInstructions.defaultMethod,
     },
