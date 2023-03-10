@@ -21,7 +21,7 @@ contract MultiERC20 is IMultiERC20, ERC20Burnable, AccessControl {
         _revokeRole(MINTER_ROLE, minter);
     }
 
-    function mint(address to, uint256 amount) public override onlyRole(MINTER_ROLE) {
+    function mint(address to, uint256 amount) public override {
         _mint(to, amount);
     }
 
