@@ -76,14 +76,16 @@ contract RentMarket is IRentMarket, OwnableLink {
             address(this), 
             lend.tokenId, 
             lend.collectionAddress)) {
-            if (lend.endTimestamp > block.timestamp) {
-                return lend.rents.length == 0
-                    ? true 
-                    : _rentMap[
-                        lend.rents[lend.rents.length-1]
-                        ].endTimestamp < block.timestamp
-                        ? false
-                        : getClosedRentStatus(lend.id);
+                if (!lend.claimed) {
+                    if (lend.endTimestamp > block.timestamp) {
+                        return lend.rents.length == 0
+                            ? true 
+                            : _rentMap[
+                                lend.rents[lend.rents.length-1]
+                                ].endTimestamp < block.timestamp
+                                ? false
+                                : getClosedRentStatus(lend.id);
+                }
             }
         }
     }
@@ -337,11 +339,14 @@ contract RentMarket is IRentMarket, OwnableLink {
         public override {
         Lend storage lend = _lendMap[lendId];
         require(!lend.claimed, "already claimed");
-        require(lend.endTimestamp < block.timestamp, "its landing now");
         uint tokenAmount;
         
         if (lend.rents.length > 0) {
             for (uint i; i < lend.rents.length; i++) {
+                require(
+                    _rentMap[lend.rents[i]].endTimestamp < block.timestamp,
+                    "it renting now"
+                );
                 tokenAmount += 
                     lend.timeUnitPrice * 
                     _rentMap[lend.rents[i]].timeUnitCount;
@@ -379,8 +384,16 @@ contract RentMarket is IRentMarket, OwnableLink {
         Lend storage lend = _lendMap[lendId];
         uint tokenAmount = lend.timeUnitPrice * timeUnitCount;
         if (lend.supprortedInterface == Types.ERC721) {
-            require(_tokenPayment.allowance(msg.sender, address(this)) >= lend.deposit, "Haven't tokens to deposit");
-            _tokenPayment.transferFrom(msg.sender, address(this), lend.deposit);
+            require(
+                _tokenPayment.allowance(msg.sender, address(this)) >= 
+                lend.deposit, 
+                "Haven't tokens to deposit"
+            );
+            _tokenPayment.transferFrom(
+                msg.sender, 
+                address(this), 
+                lend.deposit
+            );
         }
         require(
             lend.endTimestamp >
@@ -397,7 +410,10 @@ contract RentMarket is IRentMarket, OwnableLink {
         rentId = _rents.current();
         address customer = msg.sender;
         uint startTimestamp = block.timestamp;
-        uint endTimestamp = startTimestamp + timeUnitCount * lend.timeUnitSeconds;
+        uint endTimestamp = 
+            startTimestamp + 
+            timeUnitCount * 
+            lend.timeUnitSeconds;
         IERC4907 collection = IERC4907(lend.collectionAddress);
         
         if (lend.supprortedInterface == Types.ERC4907) {
@@ -430,8 +446,16 @@ contract RentMarket is IRentMarket, OwnableLink {
         Lend storage lend = _lendMap[rent.lendId];
         IERC4907 collection = IERC4907(lend.collectionAddress);
         require(rent.endTimestamp < block.timestamp, "to late");
-        require(lend.supprortedInterface == Types.ERC721, "doesn't need to close");
-        require(isApprovedOrOwner(address(this), lend.tokenId, lend.collectionAddress), "doesn't approved");
+        require(
+            lend.supprortedInterface == Types.ERC721,
+            "doesn't need to close");
+        require(
+            isApprovedOrOwner(
+                address(this), 
+                lend.tokenId, 
+                lend.collectionAddress), 
+            "doesn't approved"
+        );
         collection.transferFrom(msg.sender, address(this), lend.tokenId);
         _tokenPayment.transfer(msg.sender, lend.deposit);
         rent.closed = true;
